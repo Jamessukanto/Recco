@@ -119,6 +119,10 @@ We want our recommender to account for a lot of factors: some static, some movin
 - Session-aware Collaborative Filtering (CF)
 - XGBoost, as final score aggregator
 
+
+<br>
+
+
 ### (2.1) Market Risk Appraiser  
 
 We want to ease user concerns around property buying by assigning a risk score.
@@ -130,6 +134,10 @@ We want to ease user concerns around property buying by assigning a risk score.
 
 **Output:**  Market risk score (0 - 1). Optional UI display:  
   > “20% below market price”  
+
+
+<br>
+
 
 ### (2.2) Market-Aware Content-Based Filtering (with FAISS)  
 
@@ -150,13 +158,16 @@ We recommend properties by comparing user profile to property embeddings, identi
 - Semantic similarity scores of properties  
 
 
+<br>
+
+
 ### (2.3) Transformer4Rec
 
 We recommend based on user interactions sequence within a session. <em>Transformer4Rec has nice integration with Hugging Face transformers!</em>
 
 > The conventional primary output of a Transformer4Rec is typically the probability distribution over properties. 
 > 
-> We **discard this primary head, however, in favor of user session embeddings** as outputs, which capture temporal behavior and engagement signals in a session.
+> We **discard this primary head, however, in favor of user session features**, as inputs to its downstream module i.e. Collaborative Filtering.
 
 Not advisable as stand-alone, because:
 - Users make big decisions over multiple sessions (months even).
@@ -174,30 +185,34 @@ Not advisable as stand-alone, because:
 		- Predict session duration
 		- ...
 
-**Output:**  User session embedding 
+**Output:**  User session features 
+
+
+<br>
 
 
 ### (2.4) Session-Aware Collaborative Filtering (User-based)
 We recommend based on what similar properties are engaged with.
 
 **Input:** 
-- User events / interactions
-- User session embedding from (2.3)
+- User interactions
+- User session features from (2.3)
 
 **Logic:**  
-- Concat(interactions_embedding, user_session_embedding)
-- Create a user-property interaction matrix (rows=users; columns=properties)
+- Assign different weights to interactions to generate engagement scores
+- Create a user-property interaction matrix (rows=users; columns=properties, value=engagement scores)
 - Apply Matrix Factorization (ALS) to uncover latent factors:  
 
 | Method | ALS | SVD |  
 |------------|--------|--------|  
 | Scalability | Incremental | `O(N^3)` |  
 | Adaptable to preference changes** | Updated without retraining | Batch → stale recommendations |  
-| Handles implicit data | ✅ (clicks, watch_time) | ❌ (1-5 stars) |  
+| Treats missing data as | Potential +ve signals | Unknown |  
 
 **Output:**  
-- User similarity scores of properties
+- User engagement scores
 
+<br>
 
 ### (2.5) XGBoost
 
