@@ -144,18 +144,18 @@ We want to ease user concerns around property buying by assigning a risk score.
 We recommend properties by comparing user profile to property embeddings, identifying properties that share similar attributes.
 
 **Input:**  
-- Static user preference features
+- User interactions
 - Intermediate property embeddings  
 - Intermediate property features  
 - Market risk score from (2.1)  
 
 **Logic:**  
 - Encode intermediate property vectors and market risk score into property embedding
-- Encode user preferences into a user embedding vector, to relieve from data sparsity
+- Learn user embeddings from interactions
 - Perform ANN search in FAISS to retrieve properties
 
 **Output:**  
-- Semantic similarity scores of properties  
+- Similarity scores of properties  
 
 
 <br>
