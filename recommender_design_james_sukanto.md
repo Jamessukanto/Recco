@@ -37,7 +37,7 @@ The following, I think, are reasonable initial assumptions:
 
 | Term | Examples | 
 |------------|--------|
-| Explicit user preference features | Bedrooms, location, budget, school ratings |  
+| Static user preference features | Bedrooms, location, budget, school ratings |  
 | User events / interactions | Clicks, views, dwell time, etc. |  
 
 <br>
@@ -50,14 +50,14 @@ The following, I think, are reasonable initial assumptions:
 ### (0.1) Airflow ETL 
 
 **Extract:**  
-- Explicit user preference data from app
+- Static user preference data from app
 - Async jobs to retrieve property data with Scrapy + Playwright  
 
 **Transform:**  
 - Standardize & generate **intermediate property vectors** :  
   - Property text descriptions, reviews → BERT embeddings  
   - Property images → CLIP embeddings  
-  - Explicit user preference features   
+  - Static user preference features   
   - Property proximity to amenities → Proximity features:  
     - Pre-fetch amenities with Google Places API  
     - Pre-compute & store proximity features  
@@ -91,7 +91,7 @@ We want to allow users to change their mind or be unsure of their preferences �
 
 ### (1.1) Preference Contradiction Detector  
 
-**Input:** User events / interactions; Explicit user preferences features
+**Input:** User events / interactions; Static user preferences features
 
 **Logic:**  
 - Rule-based checks to identify simple contradictions  
@@ -144,7 +144,7 @@ We want to ease user concerns around property buying by assigning a risk score.
 We recommend properties by comparing user profile to property embeddings, identifying properties that share similar attributes.
 
 **Input:**  
-- Explicit user preference features
+- Static user preference features
 - Intermediate property embeddings  
 - Intermediate property features  
 - Market risk score from (2.1)  
@@ -224,7 +224,7 @@ We aggregate scores to optimize property ranking.
 - Content-based filtering score from **(2.2)**  
 - Collaborative filtering score from **(2.4)**  
 - Redundant initial features (not intermediate embeddings!) 
-	- Explicit user preference features
+	- Static user preference features
 	- User events / interactions	
 
 **Logic:**  
