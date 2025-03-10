@@ -108,8 +108,15 @@ We want to allow users to change their mind or be unsure of their preferences �
 - Only after X number of user clicks (subtle UI nudges)
 -  "No user feedback is user feedback! ;) "  
 
+**Evaluation:**  
+- Metrics:
+  - Precision: Measuring FPs ensures we aren’t nudging users unnecessarily
+  - Recall: Ensures we don’t miss significant contradictions
+
+
 <br>
 <br>
+
 
 ## 2. Property Recommender  🚀
 We want our recommender to account for a lot of factors: some static, some moving parts – we make use of a multi-modal setup containing: 
@@ -157,6 +164,18 @@ We recommend properties by comparing user profile to property embeddings, identi
 **Output:**  
 - Similarity scores of properties  
 
+**Evaluation:** 
+Run offline evaluation (Pre-XGBoost): Use past interaction data to see how well CBF ranks relevant items.
+  - Metrics:
+    - On ranking quality:
+      - MRR: How early the most relevant item appears in the ranked list
+      - NDCG: Reward good placements of highly relevant items.
+      - Diversity Score: Based on similarity between embeddings
+      - Coverage Score: Avoid recommending the same few
+    - On user engagement:
+      - CTR: How often users click on recommended properties
+    - Latency
+
 
 <br>
 
@@ -185,7 +204,11 @@ Not advisable as stand-alone, because:
 		- Predict session duration
 		- ...
 
-**Output:**  User session features 
+**Output:**  User session features
+
+**Evaluation:** 
+Run offline evaluation (Pre-XGBoost): Use past interaction data to see how well CBF ranks relevant items.
+  - Metrics: MSE for regressors, Cross entropy for classifiers
 
 
 <br>
@@ -212,7 +235,12 @@ We recommend based on what similar properties are engaged with.
 **Output:**  
 - User engagement scores
 
+**Evaluation:** 
+The metrics and offline evaluation of (2.2) apply here
+
+
 <br>
+
 
 ### (2.5) XGBoost
 
@@ -237,6 +265,11 @@ We aggregate scores to optimize property ranking.
 **Output:**  
 - Final rank scores → Ranked recommendations
 - Feature Importance
+
+**Evaluation:**
+Online evaluation: Use real user engagement on served recommendations
+- Metrics: MSE 
+
 
 <br>
 <br>
